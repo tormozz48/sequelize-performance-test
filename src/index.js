@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 const dotenv = require('dotenv');
 const UserModel = require('./model/user.model');
-const { getSequelize } = require('./sequelize');
+const { getSequelize, close } = require('./sequelize');
 const rawFlagSuites = require('./suites/raw-flag/suite');
 
 const env = dotenv.config();
@@ -28,7 +28,7 @@ console.info('-- Start Sequelize performance testing --');
     console.error(error.message);
   } finally {
     if (sequelize) {
-      await sequelize.close();
+      await close();
     }
   }
 })();

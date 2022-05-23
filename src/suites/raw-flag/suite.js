@@ -19,19 +19,23 @@ async function fillUsers(User, n) {
   await User.bulkCreate(userData);
 }
 
-function makeSuite(User, n) {
+const options = {
+  minSamples: 10,
+};
+
+async function makeSuite(User, n) {
+  await fillUsers(User, n);
+
   return suite(
     `Raw Flag Suite. Number of records = ${n}`,
 
-    add('Raw flag enabled', async () => async () => {
-      await fillUsers(User, n);
-      await User.findAll({ raw: true });
-    }),
-
-    add('Raw flag disabled', async () => async () => {
-      await fillUsers(User, n);
+    add('Raw flag disabled', async () => {
       await User.findAll({ raw: false });
-    }),
+    }, options),
+
+    add('Raw flag enabled', async () => {
+      await User.findAll({ raw: true });
+    }, options),
 
     cycle(),
     complete(),
